@@ -7,8 +7,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 class MyWidget(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('trainer.ui', self)
-        self.pushButton.clicked.connect(self.check_word)
+        uic.loadUi('trainer_win.ui', self)
         self.pushButton_2.clicked.connect(self.start_void)
         self.started = False
         self.max_lenn = 15
@@ -29,6 +28,10 @@ class MyWidget(QMainWindow):
             self.radioButton_14,
             self.radioButton_15
         ]
+
+        for button in self.radio_buttons:
+            button.clicked.connect(self.check_word)
+
         self.labels = [
             self.label,
             self.label_2,
@@ -46,7 +49,7 @@ class MyWidget(QMainWindow):
             self.label_14,
             self.label_15
         ]
-        self.write_word("вероисповедание")
+        self.start_void()
 
     def start_void(self):
         self.started = True
@@ -68,8 +71,9 @@ class MyWidget(QMainWindow):
         for i, button in enumerate(self.radio_buttons):
             if button.isChecked():
                 try:
+                    button.setChecked(True)
                     if self.reader[self.current_ind][i].isupper():
-                        self.write_verdict("Правильно!")
+                        self.write_verdict(f"{self.reader[self.current_ind]} - правильно!")
                     else:
                         self.write_verdict(f"Неправильно! Правильно - {self.reader[self.current_ind]}")
                         text = self.plainTextEdit.toPlainText()
@@ -87,6 +91,7 @@ class MyWidget(QMainWindow):
                     self.progressBar.setValue(int(self.current_ind / self.total_len * 100))
                 except:
                     self.write_verdict("Вы делаете что-то не так!")
+                    print("error")
                     pass
 
     def write_word(self, word):
